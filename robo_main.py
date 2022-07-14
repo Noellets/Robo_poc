@@ -1,8 +1,10 @@
+from dis import dis
 import time
 from datetime import datetime
 #import getch       
 #import msvcrt      #rodar no visual studio    
 from sys import platform
+import ultra
 
 plat_win = False
 if platform == "linux" or platform == "linux2":
@@ -24,7 +26,6 @@ else:
 direcao_string = "Digite uma tecla para mover o robo (A, W, S, D): "
 braco_string = "Digite uma tecla para utilizar o braco (T, G, Y, H, U, J, I, K): "
 
-
 def inicio():
     now = datetime.now()
     # dd/mm/YY H:M:S
@@ -42,6 +43,10 @@ def fim():
 
 def frente():
     print("Ande para a frente!")
+    distancia = ultra.checkdist()
+    print("A distancia é: ", distancia)
+    if distancia > 0.10:
+        print("Distancia maior que 10!")
         
 def tras():
     print("Ande para tras!")
