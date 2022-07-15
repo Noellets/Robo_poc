@@ -1,3 +1,4 @@
+from curses import KEY_DC
 import time
 from datetime import datetime
 #import getch       
@@ -6,6 +7,7 @@ from sys import platform
 import ultra
 import servo
 import move
+import LED
 
 plat_win = False
 if platform == "linux" or platform == "linux2":
@@ -26,6 +28,7 @@ else:
 #Variaveis
 direcao_string = "Digite uma tecla para mover o robo (A, W, S, D): "
 braco_string = "Digite uma tecla para utilizar o braco (T, G, Y, H, U, J, I, K): "
+led = LED.LED()
 
 def inicio():
     now = datetime.now()
@@ -48,23 +51,31 @@ def frente():
     print("A distancia é: ", distancia)
     if distancia > 0.10:
         print("Distancia maior que 10!")
+        led.colorWipe(0, 255, 0)            #verde
         speed_set = 60
         move.move(speed_set, 'forward', 'no', 0.8)
         time.sleep(0.3)
         move.motorStop()
-        
+        led.colorWipe(0, 0, 255)        #azul
+   
 def tras():
     print("Ande para tras!")
+    led.colorWipe(255, 0, 0)        #vermelho
     speed_set = 60
     move.move(speed_set, 'backward', 'no', 0.8)
     time.sleep(0.3)
     move.motorStop()
+    led.colorWipe(0, 0, 255)       #azul
        
 def esquerda():
+    led.colorWipe(200, 162, 200)        #lilas
+    time.sleep(0.3)
     servo.direcaoleft(10)
     print("Vire para a esquerda!")
 
 def direita():
+    led.colorWipe(255, 165, 0)      #laranja
+    time.sleep(0.3)
     servo.direcaoright(10)
     print("Vire para a direita!")
         
@@ -155,4 +166,5 @@ if __name__ == '__main__':
    
     fim()
     move.destroy()
+    led.colorWipe(0, 0, 0)      #lights out
 
