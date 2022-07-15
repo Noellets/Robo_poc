@@ -155,7 +155,7 @@ def ahead():
 def get_direction():
 	return (pwm0_pos - pwm0_init)
 
-
+'''
 if __name__ == '__main__':
 	#while 1:
 		for i in range(0,100,10):
@@ -169,3 +169,4 @@ if __name__ == '__main__':
 			#pwm.set_pwm(0, 0, (300-i))
 			#time.sleep(0.05)
 			
+'''

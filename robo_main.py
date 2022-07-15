@@ -1,10 +1,10 @@
-from dis import dis
 import time
 from datetime import datetime
 #import getch       
 #import msvcrt      #rodar no visual studio    
 from sys import platform
 import ultra
+import servo
 
 plat_win = False
 if platform == "linux" or platform == "linux2":
@@ -52,33 +52,43 @@ def tras():
     print("Ande para tras!")
        
 def esquerda():
+    servo.direcaoleft(10)
     print("Vire para a esquerda!")
 
 def direita():
+    servo.direcaoright(10)
     print("Vire para a direita!")
         
 def braco_direita():
+    servo.armright(10)
     print("Vire o braco para a direita!")
         
 def braco_esquerda():
+    servo.armleft(10)
     print("Vire o braco para a esquerda!")
 
 def braco_levanta():
+    servo.armup(10)
     print("Levante o braco!")
 
 def braco_abaixa():
+    servo.armdown(10)
     print("Abaixe o braco!")
 
 def mao_levanta():
+    servo.handup(20)
     print("Levante a mao!")
 
 def mao_abaixa():
+    servo.handdown(10)
     print("Abaixe a mao!")
 
 def mao_fecha():
+    servo.grab(10)
     print("Feche a mao!")
 
 def mao_abre():
+    servo.loose(10)
     print("Abra a mao!")
 
 
