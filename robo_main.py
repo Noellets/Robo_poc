@@ -135,5 +135,6 @@ def funcionalidade():
 
 if __name__ == '__main__':
     inicio()
+    servo.servo_init()
     funcionalidade()
     fim()
