@@ -50,14 +50,14 @@ def frente():
         print("Distancia maior que 10!")
         speed_set = 60
         move.move(speed_set, 'forward', 'no', 0.8)
-        time.sleep(1)
+        time.sleep(0.3)
         move.motorStop()
         
 def tras():
     print("Ande para tras!")
     speed_set = 60
     move.move(speed_set, 'backward', 'no', 0.8)
-    time.sleep(1)
+    time.sleep(0.3)
     move.motorStop()
        
 def esquerda():
