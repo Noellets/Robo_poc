@@ -5,6 +5,7 @@ from datetime import datetime
 from sys import platform
 import ultra
 import servo
+import move
 
 plat_win = False
 if platform == "linux" or platform == "linux2":
@@ -47,9 +48,17 @@ def frente():
     print("A distancia é: ", distancia)
     if distancia > 0.10:
         print("Distancia maior que 10!")
+        speed_set = 60
+        move.move(speed_set, 'forward', 'no', 0.8)
+        time.sleep(1)
+        move.motorStop()
         
 def tras():
     print("Ande para tras!")
+    speed_set = 60
+    move.move(speed_set, 'backward', 'no', 0.8)
+    time.sleep(1)
+    move.motorStop()
        
 def esquerda():
     servo.direcaoleft(10)
@@ -135,6 +144,15 @@ def funcionalidade():
 
 if __name__ == '__main__':
     inicio()
-    servo.servo_init()
-    funcionalidade()
+    
+    try:
+        servo.servo_init()
+        move.setup()
+        funcionalidade()
+    except:
+        print("Emergencia!")
+        move.destroy()
+   
     fim()
+    move.destroy()
+
