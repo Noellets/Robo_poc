@@ -44,6 +44,8 @@ class LED:
             self.strip.setPixelColor(i, color)
             self.strip.show()
 
+
+'''
 if __name__ == '__main__':
     led = LED()
     try:  
@@ -56,3 +58,5 @@ if __name__ == '__main__':
             time.sleep(1) 
     except:  
         led.colorWipe(0,0,0)  # Lights out
+
+'''

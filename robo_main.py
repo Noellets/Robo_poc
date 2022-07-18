@@ -1,4 +1,3 @@
-from curses import KEY_DC
 import time
 from datetime import datetime
 #import getch       
@@ -8,6 +7,7 @@ import ultra
 import servo
 import move
 import LED
+import farol
 
 plat_win = False
 if platform == "linux" or platform == "linux2":
@@ -51,33 +51,45 @@ def frente():
     print("A distancia é: ", distancia)
     if distancia > 0.10:
         print("Distancia maior que 10!")
+        farol.aciona_led(1, True)       #acende farol 1
+        farol.aciona_led(2, True)       #acende farol 2
         led.colorWipe(0, 255, 0)            #verde
         speed_set = 60
         move.move(speed_set, 'forward', 'no', 0.8)
         time.sleep(0.3)
         move.motorStop()
+        farol.aciona_led(1, False)      #apaga farol 1
+        farol.aciona_led(2, False)      #apaga farol 2
         led.colorWipe(0, 0, 255)        #azul
    
 def tras():
     print("Ande para tras!")
+    farol.aciona_led(3, True)       #acende farol 3
     led.colorWipe(255, 0, 0)        #vermelho
     speed_set = 60
     move.move(speed_set, 'backward', 'no', 0.8)
     time.sleep(0.3)
     move.motorStop()
+    farol.aciona_led(3, False)      #apaga farol 3
     led.colorWipe(0, 0, 255)       #azul
        
 def esquerda():
     led.colorWipe(200, 162, 200)        #lilas
-    time.sleep(0.3)
+    farol.aciona_led(1, True)       #acende farol 1
     servo.direcaoleft(10)
+    time.sleep(0.3)
     print("Vire para a esquerda!")
+    farol.aciona_led(1, False)      #apaga farol 1
+    led.colorWipe(0, 0, 255)        #azul
 
 def direita():
     led.colorWipe(255, 165, 0)      #laranja
-    time.sleep(0.3)
+    farol.aciona_led(2, True)       #acende farol 2
     servo.direcaoright(10)
+    time.sleep(0.3)
     print("Vire para a direita!")
+    farol.aciona_led(2, False)      #apaga farol 2
+    led.colorWipe(0, 0, 255)        #azul
         
 def braco_direita():
     servo.armright(10)
@@ -159,6 +171,8 @@ if __name__ == '__main__':
     try:
         servo.servo_init()
         move.setup()
+        farol.setup_raspberry()
+        farol.apaga_todos_leds()
         funcionalidade()
     except:
         print("Emergencia!")
@@ -167,4 +181,5 @@ if __name__ == '__main__':
     fim()
     move.destroy()
     led.colorWipe(0, 0, 0)      #lights out
+    #farol.apaga_todos_leds()        #apaga todos os farois
 
