@@ -8,6 +8,7 @@ import servo
 import move
 import LED
 import farol
+import OLED
 
 plat_win = False
 if platform == "linux" or platform == "linux2":
@@ -29,6 +30,7 @@ else:
 direcao_string = "Digite uma tecla para mover o robo (A, W, S, D): "
 braco_string = "Digite uma tecla para utilizar o braco (T, G, Y, H, U, J, I, K): "
 led = LED.LED()
+screen = OLED.OLED_ctrl()
 
 def inicio():
     now = datetime.now()
@@ -173,13 +175,15 @@ if __name__ == '__main__':
         move.setup()
         farol.setup_raspberry()
         farol.apaga_todos_leds()
+        screen.screen_show(1, "INICIANDO...")
         funcionalidade()
+        screen.screen_show(6, "FINALIZANDO...")
+        move.destroy()
+        led.colorWipe(0, 0, 0)      #lights out
+        farol.apaga_todos_leds()        #apaga todos os farois
     except:
         print("Emergencia!")
-        move.destroy()
    
     fim()
-    move.destroy()
-    led.colorWipe(0, 0, 0)      #lights out
-    #farol.apaga_todos_leds()        #apaga todos os farois
+   
 
