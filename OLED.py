@@ -65,7 +65,7 @@ class OLED_ctrl:
 			text_5 = text
 		elif position == 6:
 			text_6 = text
-		self.run()
+		#self.run()
 
 
 '''

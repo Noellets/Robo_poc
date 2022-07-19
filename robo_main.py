@@ -31,6 +31,8 @@ direcao_string = "Digite uma tecla para mover o robo (A, W, S, D): "
 braco_string = "Digite uma tecla para utilizar o braco (T, G, Y, H, U, J, I, K): "
 led = LED.LED()
 screen = OLED.OLED_ctrl()
+lista_funcionalidade = ["", "", "", "", ""]
+
 
 def inicio():
     now = datetime.now()
@@ -48,6 +50,9 @@ def fim():
 
 
 def frente():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Andar frente")
+    atualizar_display()
     print("Ande para a frente!")
     distancia = ultra.checkdist()
     print("A distancia é: ", distancia)
@@ -65,6 +70,9 @@ def frente():
         led.colorWipe(0, 0, 255)        #azul
    
 def tras():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Andar tras")
+    atualizar_display()
     print("Ande para tras!")
     farol.aciona_led(3, True)       #acende farol 3
     led.colorWipe(255, 0, 0)        #vermelho
@@ -76,6 +84,9 @@ def tras():
     led.colorWipe(0, 0, 255)       #azul
        
 def esquerda():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Virar esquerda")
+    atualizar_display()
     led.colorWipe(200, 162, 200)        #lilas
     farol.aciona_led(1, True)       #acende farol 1
     servo.direcaoleft(10)
@@ -85,6 +96,9 @@ def esquerda():
     led.colorWipe(0, 0, 255)        #azul
 
 def direita():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Virar direita")
+    atualizar_display()
     led.colorWipe(255, 165, 0)      #laranja
     farol.aciona_led(2, True)       #acende farol 2
     servo.direcaoright(10)
@@ -94,40 +108,77 @@ def direita():
     led.colorWipe(0, 0, 255)        #azul
         
 def braco_direita():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Braco direita")
+    atualizar_display()
     servo.armright(10)
     print("Vire o braco para a direita!")
         
 def braco_esquerda():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Braco esquerda")
+    atualizar_display()
     servo.armleft(10)
     print("Vire o braco para a esquerda!")
 
 def braco_levanta():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Braco levanta")
+    atualizar_display()
     servo.armup(10)
     print("Levante o braco!")
 
 def braco_abaixa():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Braco abaixa")
+    atualizar_display()
     servo.armdown(10)
     print("Abaixe o braco!")
 
 def mao_levanta():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Mao levanta")
+    atualizar_display()
     servo.handup(20)
     print("Levante a mao!")
 
 def mao_abaixa():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Mao abaixa")
+    atualizar_display()
     servo.handdown(10)
     print("Abaixe a mao!")
 
 def mao_fecha():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Mao fecha")
+    atualizar_display()
     servo.grab(10)
     print("Feche a mao!")
 
 def mao_abre():
+    global lista_funcionalidade
+    lista_funcionalidade.append("Mao abre")
+    atualizar_display()
     servo.loose(10)
     print("Abra a mao!")
 
-
+def atualizar_display():
+    global lista_funcionalidade
+    tamanho = len(lista_funcionalidade)
+    if tamanho > 5:
+        diferenca = tamanho - 5
+        while diferenca > 0:
+            lista_funcionalidade.pop(0)
+            diferenca -= 1
+    for linha in range(5):
+        screen.screen_show(linha + 2, lista_funcionalidade[linha])
+    screen.run()
+    
+        
 def funcionalidade():
     executando = True
+    screen.screen_show(1, "Historico")
     print(direcao_string)
     print(braco_string)
     while executando:
@@ -171,13 +222,15 @@ if __name__ == '__main__':
     inicio()
     
     try:
+        screen.screen_show(1, "Iniciando")
+        screen.run()
         servo.servo_init()
         move.setup()
         farol.setup_raspberry()
         farol.apaga_todos_leds()
-        screen.screen_show(1, "INICIANDO...")
         funcionalidade()
-        screen.screen_show(6, "FINALIZANDO...")
+        screen.screen_show(6, "Finalizando")
+        screen.run()
         move.destroy()
         led.colorWipe(0, 0, 0)      #lights out
         farol.apaga_todos_leds()        #apaga todos os farois
