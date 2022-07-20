@@ -3,12 +3,13 @@ from datetime import datetime
 #import getch       
 #import msvcrt      #rodar no visual studio    
 from sys import platform
-import ultra
-import servo
-import move
-import LED
-import farol
-import OLED
+import ultra            #verificar distancia
+import servo            #direcao do robo, bracos e mao
+import move             #mover robo
+import LED              #cores led
+import farol            #acender e apagar farois
+import OLED             #display
+import mpu6050Test      #acelerometro, giroscopio e temperatura
 
 plat_win = False
 if platform == "linux" or platform == "linux2":
@@ -29,6 +30,9 @@ else:
 #Variaveis
 direcao_string = "Digite uma tecla para mover o robo (A, W, S, D): "
 braco_string = "Digite uma tecla para utilizar o braco (T, G, Y, H, U, J, I, K): "
+temp_string = "Digite C para verificar a temperatura: "
+acel_string = "Digite Z para verificar o acelerometro: "
+giro_string = "Digite M para verificar o giroscopio: "
 led = LED.LED()
 screen = OLED.OLED_ctrl()
 lista_funcionalidade = ["", "", "", "", ""]
@@ -51,7 +55,7 @@ def fim():
 
 def frente():
     global lista_funcionalidade
-    lista_funcionalidade.append("Andar frente")
+    lista_funcionalidade.append("Andar frente")     #inclui "Andar frente" no final da lista
     atualizar_display()
     print("Ande para a frente!")
     distancia = ultra.checkdist()
@@ -71,7 +75,7 @@ def frente():
    
 def tras():
     global lista_funcionalidade
-    lista_funcionalidade.append("Andar tras")
+    lista_funcionalidade.append("Andar tras")       #inclui "Andar tras" no final da lista
     atualizar_display()
     print("Ande para tras!")
     farol.aciona_led(3, True)       #acende farol 3
@@ -85,7 +89,7 @@ def tras():
        
 def esquerda():
     global lista_funcionalidade
-    lista_funcionalidade.append("Virar esquerda")
+    lista_funcionalidade.append("Virar esquerda")       #inclui "Virar esquerda" no final da lista
     atualizar_display()
     led.colorWipe(200, 162, 200)        #lilas
     farol.aciona_led(1, True)       #acende farol 1
@@ -97,7 +101,7 @@ def esquerda():
 
 def direita():
     global lista_funcionalidade
-    lista_funcionalidade.append("Virar direita")
+    lista_funcionalidade.append("Virar direita")        #inclui "Virar direita" no final da lista
     atualizar_display()
     led.colorWipe(255, 165, 0)      #laranja
     farol.aciona_led(2, True)       #acende farol 2
@@ -109,56 +113,56 @@ def direita():
         
 def braco_direita():
     global lista_funcionalidade
-    lista_funcionalidade.append("Braco direita")
+    lista_funcionalidade.append("Braco direita")        #inclui "Braco direita" no final da lista
     atualizar_display()
     servo.armright(10)
     print("Vire o braco para a direita!")
         
 def braco_esquerda():
     global lista_funcionalidade
-    lista_funcionalidade.append("Braco esquerda")
+    lista_funcionalidade.append("Braco esquerda")       #inclui "Braco esquerda" no final da lista
     atualizar_display()
     servo.armleft(10)
     print("Vire o braco para a esquerda!")
 
 def braco_levanta():
     global lista_funcionalidade
-    lista_funcionalidade.append("Braco levanta")
+    lista_funcionalidade.append("Braco levanta")        #inclui "Braco levanta" no final da lista
     atualizar_display()
     servo.armup(10)
     print("Levante o braco!")
 
 def braco_abaixa():
     global lista_funcionalidade
-    lista_funcionalidade.append("Braco abaixa")
+    lista_funcionalidade.append("Braco abaixa")     #inclui "Braco abaixa" no final da lista
     atualizar_display()
     servo.armdown(10)
     print("Abaixe o braco!")
 
 def mao_levanta():
     global lista_funcionalidade
-    lista_funcionalidade.append("Mao levanta")
+    lista_funcionalidade.append("Mao levanta")      #inclui "Mao levanta" no final da lista
     atualizar_display()
     servo.handup(20)
     print("Levante a mao!")
 
 def mao_abaixa():
     global lista_funcionalidade
-    lista_funcionalidade.append("Mao abaixa")
+    lista_funcionalidade.append("Mao abaixa")       #inclui "Mao abaixa" no final da lista
     atualizar_display()
     servo.handdown(10)
     print("Abaixe a mao!")
 
 def mao_fecha():
     global lista_funcionalidade
-    lista_funcionalidade.append("Mao fecha")
+    lista_funcionalidade.append("Mao fecha")        #inclui "Mao fecha" no final da lista
     atualizar_display()
     servo.grab(10)
     print("Feche a mao!")
 
 def mao_abre():
     global lista_funcionalidade
-    lista_funcionalidade.append("Mao abre")
+    lista_funcionalidade.append("Mao abre")         #inclui "Mao abre" no final da lista
     atualizar_display()
     servo.loose(10)
     print("Abra a mao!")
@@ -169,7 +173,7 @@ def atualizar_display():
     if tamanho > 5:
         diferenca = tamanho - 5
         while diferenca > 0:
-            lista_funcionalidade.pop(0)
+            lista_funcionalidade.pop(0)     #elimina o primeiro elemento da lista
             diferenca -= 1
     for linha in range(5):
         screen.screen_show(linha + 2, lista_funcionalidade[linha])
@@ -178,9 +182,12 @@ def atualizar_display():
         
 def funcionalidade():
     executando = True
-    screen.screen_show(1, "Historico")
+    screen.screen_show(1, "Historico")      #mostra no display, na linha 1: "Historico"
     print(direcao_string)
     print(braco_string)
+    print(temp_string)
+    print(acel_string)
+    print(giro_string)
     while executando:
         if plat_win:
             tecla = msvcrt.getwch()     #rodar no visual studio
@@ -210,6 +217,15 @@ def funcionalidade():
             mao_fecha()
         elif tecla == "K" or tecla == "k":
             mao_abre()        
+        elif tecla == "C" or tecla == "c":
+            print("Temperatura")
+            mpu6050Test.temperatura()           #mostra a temperatura
+        elif tecla == "Z" or tecla == "z":
+            print("Acelerometro")
+            mpu6050Test.acelerometro()          #mostra o acelerometro
+        elif tecla == "M" or tecla == "m":
+            print("Giroscopio")
+            mpu6050Test.giroscopio()            #mostra o giroscopio
         elif tecla == "X" or tecla == "x":
             print("Finalizar programa!")
             executando = False
@@ -222,14 +238,14 @@ if __name__ == '__main__':
     inicio()
     
     try:
-        screen.screen_show(1, "Iniciando")
+        screen.screen_show(1, "Iniciando")      #mostra no display, na linha 1: "Iniciando"
         screen.run()
         servo.servo_init()
         move.setup()
         farol.setup_raspberry()
         farol.apaga_todos_leds()
         funcionalidade()
-        screen.screen_show(6, "Finalizando")
+        screen.screen_show(6, "Finalizando")        #mostra no display, na linha 6: "Finalizando"
         screen.run()
         move.destroy()
         led.colorWipe(0, 0, 0)      #lights out
